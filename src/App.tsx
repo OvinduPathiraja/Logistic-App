@@ -1,9 +1,9 @@
 import React from 'react';
 // import './aws-config';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
+// import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
-import Login from './pages/Login';
+// import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Logistics from './pages/Logistics';
 import Map from './pages/Map';
@@ -15,10 +15,9 @@ import NotFound from './pages/NotFound';
 
 function App() {
   return (
-    <AuthProvider>
+    // <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/login" element={<Login />} />
           <Route path="/" element={<Dashboard />} />
           <Route path="/logistics" element={<Logistics />} />
           <Route path="/map" element={<Map />} />
@@ -30,7 +29,7 @@ function App() {
           <Route path="*" element={<Navigate to="/404" replace />} />
         </Routes>
       </Router>
-    </AuthProvider>
+    // </AuthProvider>
   );
 }
 
