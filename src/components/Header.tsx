@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuth } from '../contexts/AuthContext';
+// import { useAuth } from '../contexts/AuthContext';
 import { Bell, Sun, Moon, User } from 'lucide-react';
 
 interface HeaderProps {
@@ -8,7 +8,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ toggleTheme, isDarkMode = false }) => {
-  const { currentUser, logout } = useAuth();
+  // const { currentUser, logout } = useAuth();
 
   return (
     <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 flex items-center justify-between shadow-sm">
@@ -40,7 +40,7 @@ const Header: React.FC<HeaderProps> = ({ toggleTheme, isDarkMode = false }) => {
             <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white">
               <User size={18} />
             </div>
-            <span className="font-medium">{currentUser?.name || 'User'}</span>
+            {/* <span className="font-medium">{currentUser?.name || 'User'}</span> */}
           </button>
           
           <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 hidden group-hover:block border border-gray-200 dark:border-gray-700">
@@ -51,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({ toggleTheme, isDarkMode = false }) => {
               Settings
             </a>
             <button 
-              onClick={logout}
+              // onClick={logout}
               className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               Sign out
