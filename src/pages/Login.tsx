@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Truck } from 'lucide-react';
@@ -11,7 +11,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const { login, isAuthenticated } = useAuth();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAuthenticated) {
       navigate('/');
     }
@@ -35,14 +35,23 @@ const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen flex bg-gray-100">
-      <div className="relative flex-1 bg-blue-600 flex justify-center items-center bg-cover bg-center"
-           style={{ backgroundImage: 'url(https://images.pexels.com/photos/7648013/pexels-photo-7648013.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2)' }}>
+      <div
+        className="relative flex-1 bg-blue-600 flex justify-center items-center bg-cover bg-center"
+        style={{
+          backgroundImage:
+            'url(https://images.pexels.com/photos/7648013/pexels-photo-7648013.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2)',
+        }}
+      >
         <div className="absolute inset-0 bg-blue-900 opacity-70 z-0"></div>
         <div className="relative z-10 p-8 text-white max-w-md">
           <h2 className="text-3xl font-bold mb-2">Welcome to XYZ Logistics</h2>
-          <p className="mb-8">Streamline your logistics operations with our powerful management platform.</p>
+          <p className="mb-8">
+            Streamline your logistics operations with our powerful management platform.
+          </p>
           <div className="bg-white/10 p-6 rounded-lg backdrop-blur-sm">
-            <p className="text-lg font-medium mb-2">"XYZ Logistics has transformed our supply chain operations completely."</p>
+            <p className="text-lg font-medium mb-2">
+              "XYZ Logistics has transformed our supply chain operations completely."
+            </p>
             <p className="text-sm opacity-80">- John Smith, Operations Director</p>
           </div>
         </div>

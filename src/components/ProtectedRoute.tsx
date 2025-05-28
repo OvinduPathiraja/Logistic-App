@@ -1,19 +1,22 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
+import { getCurrentUser } from 'aws-amplify/auth';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
 
-interface ProtectedRouteProps {
-  children: React.ReactNode;
-}
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  const [user, setUser] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+  useEffect(() => {
+  getCurrentUser()
+    .then(user => setUser(user))
+    .catch(() => setUser(null))
+    .finally(() => setLoading(false));
+}, []);
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />;
-  }
 
-  return <>{children}</>;
+  if (loading) return <div>Loading...</div>;
+  if (!user) return <Navigate to="/login" />;
+  return children;
 };
 
 export default ProtectedRoute;

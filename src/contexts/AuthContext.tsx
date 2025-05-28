@@ -1,4 +1,11 @@
-import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  ReactNode,
+} from 'react';
+import { getCurrentUser, signIn, signOut } from 'aws-amplify/auth';
 
 interface User {
   id: string;
@@ -10,7 +17,7 @@ interface User {
 interface AuthContextType {
   currentUser: User | null;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -30,54 +37,62 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is stored in localStorage
-    const storedUser = localStorage.getItem('logisticsUser');
-    if (storedUser) {
-      setCurrentUser(JSON.parse(storedUser));
-      setIsAuthenticated(true);
-    }
-    setLoading(false);
+    getCurrentUser()
+      .then((user) => {
+        const email = user.signInDetails?.loginId || 'unknown';
+        const mockUser: User = {
+          id: user.userId,
+          name: email,
+          email,
+          role: 'admin',
+        };
+        setCurrentUser(mockUser);
+        setIsAuthenticated(true);
+      })
+      .catch(() => {
+        setCurrentUser(null);
+        setIsAuthenticated(false);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const login = async (email: string, password: string) => {
-    // Mock login - in a real app, this would be an API call
     try {
-      // For demo, we'll accept any email/password combo
-      if (email && password) {
-        const mockUser = {
-          id: '1',
-          name: 'Admin User',
-          email: email,
-          role: 'admin'
-        };
-        
-        setCurrentUser(mockUser);
-        setIsAuthenticated(true);
-        localStorage.setItem('logisticsUser', JSON.stringify(mockUser));
-      } else {
-        throw new Error('Email and password are required');
-      }
+      await signIn({ username: email, password });
+
+      const user = await getCurrentUser();
+      const emailAttr = user.signInDetails?.loginId || email;
+
+      const mockUser: User = {
+        id: user.userId,
+        name: emailAttr,
+        email: emailAttr,
+        role: 'admin',
+      };
+
+      setCurrentUser(mockUser);
+      setIsAuthenticated(true);
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Amplify login error:', error);
       throw error;
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await signOut();
     setCurrentUser(null);
     setIsAuthenticated(false);
-    localStorage.removeItem('logisticsUser');
   };
 
   const value = {
     currentUser,
     login,
     logout,
-    isAuthenticated
+    isAuthenticated,
   };
 
   return (
